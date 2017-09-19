@@ -42,4 +42,4 @@
       (is (= 200 (:cod geo-weather)))
       (is (= "Chananané" (:name geo-weather))))
     (testing "bad query"
-      (is (= 400 (:cod bad-query))))))
+      (is (= "400" (:cod bad-query))))))

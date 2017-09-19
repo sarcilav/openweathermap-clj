@@ -1,6 +1,6 @@
 (ns open-weather.core
   (:require [clojure.string :as str]
-            [clojure.data.json :as json])
+            [cheshire.core :as json])
   (:import (java.net URL)))
 
 (def open-weather-url "http://api.openweathermap.org/data/2.5")
@@ -9,7 +9,7 @@
   (format "%s/%s" open-weather-url topic))
 
 (defn create-query-string [queries]
-  (map (fn [[k v]] (str (name k) "=" (name v))) queries))
+  (map (fn [[k v]] (str (name k) "=" v)) queries))
 
 (defn build-url [url queries]
   (format "%s?%s" url (str/join "&" (create-query-string queries))))
@@ -22,7 +22,7 @@
      (with-open [stream (if (= (. conn getResponseCode) 200)
                           (. conn getInputStream)
                           (. conn getErrorStream))]
-       (json/read-json (slurp stream)))))
+       (json/parse-string (slurp stream) true))))
 
   ([city-name api-key]
    (weather-at {"appId" api-key
